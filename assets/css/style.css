@@ -79,10 +79,6 @@ h1 {
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
 }
 
-.content-section.active {
-  display: block;
-}
-
 .content-section h2 {
   margin-top: 0;
   font-size: 34px;
@@ -149,27 +145,10 @@ h1 {
   backdrop-filter: blur(6px);
 }
 
-.map-placeholder {
-  min-height: 260px;
-  margin: 20px 0;
-  border: 1px dashed rgba(255, 255, 255, 0.35);
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #cccccc;
-  background: rgba(255, 255, 255, 0.05);
-}
-
 .booking-form {
   display: grid;
   gap: 16px;
   margin-top: 24px;
-}
-
-.form-row {
-  display: grid;
-  gap: 8px;
 }
 
 label {
@@ -192,11 +171,6 @@ textarea {
   resize: vertical;
 }
 
-.submit-button {
-  width: fit-content;
-  margin-top: 8px;
-}
-
 @media (max-width: 700px) {
   .content-section {
     inset: 20px;
@@ -212,16 +186,13 @@ textarea {
     flex-direction: column;
   }
 
-  .main-nav button {
+  .main-nav a {
     width: 100%;
   }
 }
 /* Contact and booking request form styles */
 .contact-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin: 24px 0;
+  margin-bottom: 24px;
 }
 
 .booking-form {
@@ -320,9 +291,6 @@ textarea {
   transform: translateY(-2px);
 }
 /* Content sections */
-.content-section {
-  display: none;
-}
 
 .content-section.active {
   display: block;
@@ -339,12 +307,17 @@ textarea {
 
 /* General action button style */
 .action-button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.75rem 1rem;
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 999px;
+  background: transparent;
   color: #ffffff;
+  font: inherit;
   text-decoration: none;
+  cursor: pointer;
   transition:
     background-color 0.2s ease,
     transform 0.2s ease;
@@ -364,4 +337,74 @@ textarea {
   color: #ffffff;
   font-size: 0.95rem;
   line-height: 1.5;
+}
+/* Google Maps embed container */
+.map-wrapper {
+  margin-top: 20px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.map-wrapper iframe {
+  display: block;
+}
+/* Gallery lightbox */
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.88);
+}
+
+.image-lightbox.active {
+  display: flex;
+}
+
+.lightbox-content {
+  max-width: 900px;
+  width: 100%;
+  margin: 0;
+  text-align: center;
+}
+
+.lightbox-image {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 14px;
+  object-fit: contain;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-caption {
+  margin-top: 12px;
+  color: #ffffff;
+  font-size: 0.95rem;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.gallery-card img {
+  cursor: pointer;
 }

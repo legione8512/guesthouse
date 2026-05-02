@@ -17,8 +17,6 @@
   <body>
     <main class="site-wrapper">
       <section class="hero">
-        <div class="hero-overlay"></div>
-
         <div class="hero-content">
           <p class="eyebrow">Pensiune în Sinaia</p>
 
@@ -70,7 +68,11 @@
       </section>
 
       <section id="rooms" class="content-section">
-        <button class="close-section" aria-label="Închide secţiunea">
+        <button
+          class="close-section"
+          type="button"
+          aria-label="Închide secţiunea"
+        >
           &times;
         </button>
 
@@ -341,7 +343,20 @@
         </div>
       </section>
     </main>
+    <div class="image-lightbox" aria-hidden="true">
+      <button
+        class="lightbox-close"
+        type="button"
+        aria-label="Închide imaginea mărită"
+      >
+        &times;
+      </button>
 
+      <figure class="lightbox-content">
+        <img class="lightbox-image" src="" alt="" />
+        <figcaption class="lightbox-caption"></figcaption>
+      </figure>
+    </div>
     <script src="assets/js/main.js"></script>
   </body>
 </html>

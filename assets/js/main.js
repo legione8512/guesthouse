@@ -1,76 +1,13 @@
-const navButtons = document.querySelectorAll(".main-nav button");
-const sections = document.querySelectorAll(".content-section");
-const closeButtons = document.querySelectorAll(".close-section");
-
-function closeAllSections() {
-  sections.forEach((section) => {
-    section.classList.remove("active");
-  });
-}
-
-navButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const sectionId = button.dataset.section;
-    const targetSection = document.getElementById(sectionId);
-
-    closeAllSections();
-
-    if (targetSection) {
-      targetSection.classList.add("active");
-    }
-  });
-});
-
-closeButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    closeAllSections();
-  });
-});
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    closeAllSections();
-  }
-});
-
-const arrivalDateInput = document.getElementById("arrival-date");
-const departureDateInput = document.getElementById("departure-date");
-const bookingForm = document.querySelector(".booking-form");
-
-const today = new Date().toISOString().split("T")[0];
-
-if (arrivalDateInput && departureDateInput) {
-  arrivalDateInput.min = today;
-  departureDateInput.min = today;
-
-  arrivalDateInput.addEventListener("change", function () {
-    departureDateInput.min = arrivalDateInput.value;
-
-    if (
-      departureDateInput.value &&
-      departureDateInput.value <= arrivalDateInput.value
-    ) {
-      departureDateInput.value = "";
-    }
-  });
-}
-
-if (bookingForm) {
-  bookingForm.addEventListener("submit", function (event) {
-    const arrivalDate = arrivalDateInput.value;
-    const departureDate = departureDateInput.value;
-
-    if (arrivalDate && departureDate && departureDate <= arrivalDate) {
-      event.preventDefault();
-      alert("Data plecării trebuie să fie după data sosirii.");
-    }
-  });
-}
 // I wait until the HTML page is fully loaded.
 document.addEventListener("DOMContentLoaded", function () {
   const navLinks = document.querySelectorAll(".main-nav a");
   const sections = document.querySelectorAll(".content-section");
   const closeButtons = document.querySelectorAll(".close-section");
+
+  const arrivalDateInput = document.getElementById("arrival-date");
+  const departureDateInput = document.getElementById("departure-date");
+  const bookingForm = document.querySelector(".booking-form");
+  const contactSection = document.getElementById("contact");
 
   // I close all open sections.
   function closeAllSections() {
@@ -81,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.classList.remove("section-open");
   }
 
-  // I open the section selected from the navigation.
+  // I open the selected section.
   function openSection(sectionId) {
     closeAllSections();
 
@@ -107,6 +44,14 @@ document.addEventListener("DOMContentLoaded", function () {
   closeButtons.forEach(function (button) {
     button.addEventListener("click", function () {
       closeAllSections();
+
+      if (window.location.hash) {
+        history.replaceState(
+          null,
+          "",
+          window.location.pathname + window.location.search,
+        );
+      }
     });
   });
 
@@ -114,6 +59,133 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape") {
       closeAllSections();
+
+      if (window.location.hash) {
+        history.replaceState(
+          null,
+          "",
+          window.location.pathname + window.location.search,
+        );
+      }
+    }
+  });
+
+  // I open a section automatically if the page loads with a hash, for example #contact.
+  if (window.location.hash) {
+    openSection(window.location.hash);
+  }
+
+  // I show a success message after the contact form was sent.
+  const urlParams = new URLSearchParams(window.location.search);
+
+  if (urlParams.get("sent") === "1" && contactSection) {
+    openSection("#contact");
+
+    const successMessage = document.createElement("p");
+    successMessage.className = "form-success-message";
+    successMessage.textContent =
+      "Cererea a fost trimisă cu succes. Vă vom contacta cât mai curând posibil.";
+
+    const sectionContent = contactSection.querySelector(".section-content");
+
+    if (sectionContent) {
+      sectionContent.insertBefore(successMessage, sectionContent.firstChild);
+    }
+  }
+
+  // I set the minimum date for arrival and departure to today.
+  if (arrivalDateInput && departureDateInput) {
+    const today = new Date();
+    const localToday = new Date(
+      today.getTime() - today.getTimezoneOffset() * 60000,
+    )
+      .toISOString()
+      .split("T")[0];
+
+    arrivalDateInput.min = localToday;
+    departureDateInput.min = localToday;
+
+    arrivalDateInput.addEventListener("change", function () {
+      departureDateInput.min = arrivalDateInput.value;
+
+      if (
+        departureDateInput.value &&
+        departureDateInput.value <= arrivalDateInput.value
+      ) {
+        departureDateInput.value = "";
+      }
+    });
+  }
+
+  // I check that the departure date is after the arrival date.
+  if (bookingForm && arrivalDateInput && departureDateInput) {
+    bookingForm.addEventListener("submit", function (event) {
+      const arrivalDate = arrivalDateInput.value;
+      const departureDate = departureDateInput.value;
+
+      if (arrivalDate && departureDate && departureDate <= arrivalDate) {
+        event.preventDefault();
+        alert("Data plecării trebuie să fie după data sosirii.");
+      }
+    });
+  }
+  const galleryImages = document.querySelectorAll(".gallery-card img");
+  const imageLightbox = document.querySelector(".image-lightbox");
+  const lightboxImage = document.querySelector(".lightbox-image");
+  const lightboxCaption = document.querySelector(".lightbox-caption");
+  const lightboxClose = document.querySelector(".lightbox-close");
+
+  // I open the clicked gallery image in a larger view.
+  function openImageLightbox(image) {
+    if (!imageLightbox || !lightboxImage || !lightboxCaption) {
+      return;
+    }
+
+    lightboxImage.src = image.src;
+    lightboxImage.alt = image.alt;
+
+    const caption = image.closest("figure")?.querySelector("figcaption");
+    lightboxCaption.textContent = caption ? caption.textContent : image.alt;
+
+    imageLightbox.classList.add("active");
+    imageLightbox.setAttribute("aria-hidden", "false");
+  }
+
+  // I close the larger image view.
+  function closeImageLightbox() {
+    if (!imageLightbox || !lightboxImage) {
+      return;
+    }
+
+    imageLightbox.classList.remove("active");
+    imageLightbox.setAttribute("aria-hidden", "true");
+    lightboxImage.src = "";
+    lightboxImage.alt = "";
+  }
+
+  galleryImages.forEach(function (image) {
+    image.addEventListener("click", function () {
+      openImageLightbox(image);
+    });
+  });
+
+  if (lightboxClose) {
+    lightboxClose.addEventListener("click", function () {
+      closeImageLightbox();
+    });
+  }
+
+  if (imageLightbox) {
+    imageLightbox.addEventListener("click", function (event) {
+      if (event.target === imageLightbox) {
+        closeImageLightbox();
+      }
+    });
+  }
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      closeImageLightbox();
     }
   });
 });
