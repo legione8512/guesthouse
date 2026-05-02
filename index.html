@@ -203,70 +203,122 @@
         </div>
       </section>
 
-      <section id="contact" class="content-section">
-        <button class="close-section" aria-label="Închide secţiunea">
-          &times;
-        </button>
+      <section id="contact" class="section">
+        <div class="section-content">
+          <h2>Contact / Cerere de rezervare</h2>
 
-        <h2>Contact / Cerere de rezervare</h2>
+          <p>
+            Pentru informaţii despre disponibilitate, preţuri sau rezervări, ne
+            puteţi contacta telefonic, pe WhatsApp sau prin formularul de mai
+            jos.
+          </p>
 
-        <p>
-          Completează formularul de mai jos, iar echipa pensiunii te va contacta
-          pentru confirmarea disponibilităţii.
-        </p>
+          <div class="contact-actions">
+            <a href="tel:+40731357323" class="action-button">Sună-ne</a>
 
-        <form class="booking-form">
-          <div class="form-row">
-            <label for="name">Nume</label>
-            <input type="text" id="name" name="name" required />
+            <a
+              href="https://wa.me/40731357323?text=Bun%C4%83%20ziua%2C%20a%C5%9F%20dori%20mai%20multe%20informa%C5%A3ii%20despre%20cazare%20la%20Pensiunea%20DONA."
+              target="_blank"
+              rel="noopener noreferrer"
+              class="action-button"
+            >
+              Trimite WhatsApp
+            </a>
           </div>
 
-          <div class="form-row">
-            <label for="phone">Telefon</label>
-            <input type="tel" id="phone" name="phone" required />
-          </div>
+          <form class="booking-form" action="contact.php" method="POST">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="name">Nume complet</label>
+                <input type="text" id="name" name="name" required />
+              </div>
 
-          <div class="form-row">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" />
-          </div>
+              <div class="form-group">
+                <label for="phone">Telefon</label>
+                <input type="tel" id="phone" name="phone" required />
+              </div>
 
-          <div class="form-row">
-            <label for="arrival">Data sosirii</label>
-            <input type="date" id="arrival" name="arrival" required />
-          </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" />
+              </div>
 
-          <div class="form-row">
-            <label for="departure">Data plecării</label>
-            <input type="date" id="departure" name="departure" required />
-          </div>
+              <div class="form-group">
+                <label for="preferred-contact">Prefer contact</label>
+                <select
+                  id="preferred-contact"
+                  name="preferred_contact"
+                  required
+                >
+                  <option value="">Alege o opţiune</option>
+                  <option value="Telefon">Telefon</option>
+                  <option value="WhatsApp">WhatsApp</option>
+                  <option value="Email">Email</option>
+                </select>
+              </div>
 
-          <div class="form-row">
-            <label for="people">Număr persoane</label>
-            <input type="number" id="people" name="people" min="1" required />
-          </div>
+              <div class="form-group">
+                <label for="arrival-date">Data sosirii</label>
+                <input
+                  type="date"
+                  id="arrival-date"
+                  name="arrival_date"
+                  required
+                />
+              </div>
 
-          <div class="form-row">
-            <label for="rooms">Număr camere</label>
-            <input type="number" id="rooms" name="rooms" min="1" required />
-          </div>
+              <div class="form-group">
+                <label for="departure-date">Data plecării</label>
+                <input
+                  type="date"
+                  id="departure-date"
+                  name="departure_date"
+                  required
+                />
+              </div>
 
-          <div class="form-row">
-            <label for="contactMethod">Prefer contact</label>
-            <select id="contactMethod" name="contactMethod">
-              <option value="telefon">Telefon</option>
-              <option value="whatsapp">WhatsApp</option>
-              <option value="email">Email</option>
-            </select>
-          </div>
+              <div class="form-group">
+                <label for="guests">Număr persoane</label>
+                <input
+                  type="number"
+                  id="guests"
+                  name="guests"
+                  min="1"
+                  max="30"
+                  required
+                />
+              </div>
 
-          <div class="form-row">
-            <label for="message">Mesaj</label>
-            <textarea id="message" name="message" rows="4"></textarea>
-          </div>
+              <div class="form-group">
+                <label for="rooms">Număr camere</label>
+                <input
+                  type="number"
+                  id="rooms"
+                  name="rooms"
+                  min="1"
+                  max="10"
+                  required
+                />
+              </div>
+            </div>
 
-          <button type="submit" class="submit-button">Trimite cererea</button>
-        </form>
+            <div class="form-group">
+              <label for="message">Mesaj</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="5"
+                placeholder="Scrieţi aici detalii despre rezervare, preferinţe sau întrebări."
+              ></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="action-button primary-button">
+                Trimite cererea
+              </button>
+            </div>
+          </form>
+        </div>
       </section>
     </main>
 

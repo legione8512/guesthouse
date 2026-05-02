@@ -32,3 +32,34 @@ document.addEventListener("keydown", (event) => {
     closeAllSections();
   }
 });
+
+const arrivalDateInput = document.getElementById("arrival-date");
+const departureDateInput = document.getElementById("departure-date");
+const bookingForm = document.querySelector(".booking-form");
+
+const today = new Date().toISOString().split("T")[0];
+
+if (arrivalDateInput && departureDateInput) {
+  arrivalDateInput.min = today;
+  departureDateInput.min = today;
+
+  arrivalDateInput.addEventListener("change", function () {
+    departureDateInput.min = arrivalDateInput.value;
+
+    if (departureDateInput.value && departureDateInput.value <= arrivalDateInput.value) {
+      departureDateInput.value = "";
+    }
+  });
+}
+
+if (bookingForm) {
+  bookingForm.addEventListener("submit", function (event) {
+    const arrivalDate = arrivalDateInput.value;
+    const departureDate = departureDateInput.value;
+
+    if (arrivalDate && departureDate && departureDate <= arrivalDate) {
+      event.preventDefault();
+      alert("Data plecării trebuie să fie după data sosirii.");
+    }
+  });
+}
