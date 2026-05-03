@@ -165,9 +165,11 @@ body.is-preload .hero-content > * {
 }
 
 .hero-logo {
+  position: relative;
   width: 5.5rem;
   height: 5.5rem;
   margin: 0;
+  margin-bottom: 3.5rem !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -178,8 +180,13 @@ body.is-preload .hero-content > * {
   font-weight: 600;
   line-height: 1;
   letter-spacing: 0;
+  overflow: visible;
 }
-
+.hero-logo-svg {
+  width: 60%;
+  height: 60%;
+  display: block;
+}
 .hero-text-panel {
   width: min(760px, 100%);
   max-width: 100%;
@@ -793,6 +800,12 @@ body.is-article-visible .hero::after {
   .hero-logo::after {
     height: 2rem;
   }
+
+  .main-nav::before {
+    top: calc(-2rem - 1px);
+    height: calc(2rem + 1px);
+  }
+
   .image.main {
     margin: 2rem 0;
   }
@@ -816,10 +829,17 @@ body.is-article-visible .hero::after {
     min-width: 0;
   }
 }
-/* I create the correct vertical line between the logo circle and the title panel. */
+
+/* I remove the automatic vertical lines, because I draw the two needed lines manually. */
+.hero-content > *::before {
+  display: none !important;
+}
+
+/* I keep the logo circle visible and allow the vertical line to extend outside it. */
 .hero-logo {
   position: relative;
   margin-bottom: 3.5rem !important;
+  overflow: visible;
 }
 
 /* I remove any wrong line above the logo. */
@@ -827,7 +847,7 @@ body.is-article-visible .hero::after {
   display: none !important;
 }
 
-/* I draw the vertical line from the bottom of the circle down to the title panel. */
+/* I draw the vertical line from the bottom of the logo circle to the title panel. */
 .hero-logo::after {
   content: "";
   position: absolute;
@@ -840,15 +860,28 @@ body.is-article-visible .hero::after {
   display: block !important;
 }
 
-/* I make sure the title panel starts after the vertical line, not directly under the circle. */
+/* I keep the title panel directly after the logo spacing. */
 .hero-text-panel {
   margin-top: 0 !important;
 }
 
-/* I remove duplicate automatic lines from the general hero elements. */
-.hero-content > *::before {
-  display: none !important;
+/* I draw the vertical line between the title panel and the navigation menu. */
+.main-nav {
+  position: relative;
 }
+
+.main-nav::before {
+  content: "";
+  position: absolute;
+  top: calc(-3.5rem - 1px);
+  left: 50%;
+  width: 1px;
+  height: calc(3.5rem + 1px);
+  background: #ffffff;
+  transform: translateX(-50%);
+  display: block !important;
+}
+
 /* Dimension-style social icons */
 .content-section .social-icons {
   display: flex;
