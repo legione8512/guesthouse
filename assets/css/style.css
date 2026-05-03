@@ -1,87 +1,329 @@
-* {
+/* =========================================================
+   Base page setup
+   I set the general page layout, font and dark background.
+   ========================================================= */
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
+html {
+  min-height: 100%;
+}
+
 body {
+  min-height: 100vh;
   margin: 0;
+  overflow-x: hidden;
   font-family: Arial, Helvetica, sans-serif;
   color: #ffffff;
-  background: #111111;
+  background: #1b1f22;
 }
 
 .site-wrapper {
   min-height: 100vh;
 }
 
+/* I disable transitions while the page is still preloading. */
+body.is-preload *,
+body.is-preload *::before,
+body.is-preload *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* =========================================================
+   Hero background and intro animation
+   I recreate the Dimension-style black intro and background fade.
+   ========================================================= */
+
 .hero {
   position: relative;
   min-height: 100vh;
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.75)),
-    url("../images/background.jpg");
-  background-size: cover;
-  background-position: center;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
+  background: #1b1f22;
 }
+
+/* I create the background image as a separate layer. */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url("../images/background.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  transform: scale(1.125);
+  transition:
+    transform 0.325s ease-in-out,
+    filter 0.325s ease-in-out;
+}
+
+/* I create the dark layer above the background image. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-color: transparent;
+  background-image: linear-gradient(
+    to top,
+    rgba(19, 21, 25, 0.5),
+    rgba(19, 21, 25, 0.5)
+  );
+  transition: background-color 2.5s ease-in-out;
+  transition-delay: 0.75s;
+}
+
+/* I keep the first screen black during preload. */
+body.is-preload .hero::before {
+  background-color: #000000;
+}
+
+/* =========================================================
+   Hero content
+   I style the logo, title panel and decorative lines.
+   ========================================================= */
 
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 900px;
+  width: min(900px, 100%);
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+  background-image: radial-gradient(
+    rgba(0, 0, 0, 0.25) 25%,
+    rgba(0, 0, 0, 0) 55%
+  );
+  transition:
+    transform 0.325s ease-in-out,
+    filter 0.325s ease-in-out,
+    opacity 0.325s ease-in-out;
+}
+
+/* I create the vertical spacing between the logo, title and menu. */
+.hero-content > * {
+  position: relative;
+  margin-top: 3.5rem;
+  transition: opacity 0.325s ease-in-out;
+}
+
+/* I draw the vertical line between hero elements. */
+.hero-content > *::before {
+  content: "";
+  position: absolute;
+  top: calc(-3.5rem - 1px);
+  left: calc(50% - 1px);
+  width: 1px;
+  height: calc(3.5rem + 1px);
+  background: #ffffff;
+}
+
+/* I remove the line above the first hero element. */
+.hero-content > :first-child {
+  margin-top: 0;
+}
+
+.hero-content > :first-child::before {
+  display: none;
+}
+
+/* I hide the hero parts during preload. */
+body.is-preload .hero-content {
+  filter: blur(0.125rem);
+}
+
+body.is-preload .hero-content > * {
+  opacity: 0;
+}
+
+.hero-logo {
+  width: 5.5rem;
+  height: 5.5rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ffffff;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: 0.08em;
+}
+
+.hero-text-panel {
+  width: min(760px, 100%);
+  max-width: 100%;
+  margin: 0;
+  padding: 3rem 2rem;
+  overflow: hidden;
+  max-height: 40rem;
+  border-top: 1px solid #ffffff;
+  border-bottom: 1px solid #ffffff;
+  transition:
+    max-height 0.75s ease,
+    padding 0.75s ease,
+    opacity 0.325s ease-in-out;
+  transition-delay: 0.25s;
+}
+
+/* I collapse only the text panel during preload. */
+body.is-preload .hero-text-panel {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
 }
 
 .eyebrow {
-  margin: 0 0 16px;
-  letter-spacing: 4px;
+  margin: 0 0 18px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.75rem;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
-  font-size: 14px;
 }
 
 h1 {
   margin: 0;
-  font-size: clamp(36px, 7vw, 76px);
-  font-weight: 700;
-  line-height: 1.05;
+  font-size: clamp(2.4rem, 6vw, 4.4rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .hero-description {
-  max-width: 680px;
-  margin: 24px auto 36px;
-  font-size: 18px;
-  line-height: 1.6;
+  max-width: 650px;
+  margin: 24px auto 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.95rem;
+  line-height: 2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
+
+/* =========================================================
+   Main navigation
+   I style the menu as connected rectangular buttons.
+   ========================================================= */
 
 .main-nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
+  gap: 0;
+  margin-top: 3.5rem;
 }
 
+.main-nav a {
+  display: block;
+  min-width: 7.5rem;
+  height: 2.75rem;
+  padding: 0 1.25rem 0 1.45rem;
+  border: 1px solid #ffffff;
+  border-left: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #ffffff;
+  font-size: 0.75rem;
+  line-height: 2.75rem;
+  letter-spacing: 0.2rem;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition:
+    background-color 0.2s ease-in-out,
+    color 0.2s ease-in-out;
+}
+
+.main-nav a:first-child {
+  border-left: 1px solid #ffffff;
+  border-radius: 4px 0 0 4px;
+}
+
+.main-nav a:last-child {
+  border-radius: 0 4px 4px 0;
+}
+
+.main-nav a:hover {
+  background-color: rgba(255, 255, 255, 0.075);
+}
+
+.main-nav a:active {
+  background-color: rgba(255, 255, 255, 0.175);
+}
+
+/* =========================================================
+   Open section behaviour
+   I fade and blur the hero when a content section is open.
+   ========================================================= */
+
+body.section-open .hero-content,
+body.is-article-visible .hero-content {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.95);
+  filter: blur(0.1rem);
+}
+
+body.section-open .hero::after,
+body.is-article-visible .hero::after {
+  transform: scale(1.0825);
+  filter: blur(0.2rem);
+}
+
+/* =========================================================
+   Content sections
+   I style the popup content panels.
+   ========================================================= */
+
 .content-section {
-  display: none;
   position: fixed;
-  inset: 40px;
-  max-width: 900px;
-  margin: auto;
-  height: fit-content;
+  top: 50%;
+  left: 50%;
+  z-index: 10;
+  width: min(900px, calc(100% - 80px));
   max-height: calc(100vh - 80px);
   overflow-y: auto;
-  background: rgba(20, 20, 20, 0.96);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 20px;
-  padding: 36px;
-  z-index: 10;
+  padding: 3.5rem 2.5rem 2.5rem;
+  border-radius: 4px;
+  background-color: rgba(27, 31, 34, 0.88);
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, -48%);
+  transition:
+    opacity 0.325s ease-in-out,
+    transform 0.325s ease-in-out,
+    visibility 0.325s ease-in-out;
+}
+
+.content-section.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
 }
 
 .content-section h2 {
   margin-top: 0;
   font-size: 34px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .content-section p,
@@ -90,16 +332,56 @@ h1 {
   line-height: 1.7;
 }
 
+.content-section ul {
+  padding-left: 1.25rem;
+}
+
+/* I style the close button like a simple Dimension-style X icon. */
 .close-section {
   position: absolute;
-  top: 18px;
-  right: 22px;
-  border: none;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0;
+  border-radius: 50%;
   background: transparent;
   color: #ffffff;
-  font-size: 32px;
+  font-size: 0;
   cursor: pointer;
 }
+
+.close-section::before,
+.close-section::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 1px;
+  background: #ffffff;
+}
+
+.close-section::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.close-section::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.close-section:hover {
+  background-color: rgba(255, 255, 255, 0.075);
+}
+
+.close-section:active {
+  background-color: rgba(255, 255, 255, 0.175);
+}
+
+/* =========================================================
+   Gallery
+   I style the image grid and gallery cards.
+   ========================================================= */
 
 .gallery-grid {
   display: grid;
@@ -109,20 +391,21 @@ h1 {
 }
 
 .gallery-card {
-  margin: 0;
   position: relative;
-  overflow: hidden;
-  border-radius: 16px;
   min-height: 190px;
-  background: rgba(255, 255, 255, 0.06);
+  margin: 0;
+  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .gallery-card img {
+  display: block;
   width: 100%;
   height: 220px;
-  display: block;
   object-fit: cover;
+  cursor: pointer;
   transition:
     transform 0.3s ease,
     filter 0.3s ease;
@@ -139,163 +422,28 @@ h1 {
   bottom: 14px;
   padding: 7px 12px;
   border-radius: 999px;
-  font-size: 14px;
-  color: #ffffff;
   background: rgba(0, 0, 0, 0.55);
   backdrop-filter: blur(6px);
-}
-
-.booking-form {
-  display: grid;
-  gap: 16px;
-  margin-top: 24px;
-}
-
-label {
-  color: #eeeeee;
-}
-
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 13px 14px;
-  border-radius: 10px;
-  border: 1px solid #444444;
-  background: #181818;
   color: #ffffff;
-  font-size: 15px;
+  font-size: 14px;
 }
 
-textarea {
-  resize: vertical;
+/* =========================================================
+   Location and action buttons
+   I style the map area and contact/location buttons.
+   ========================================================= */
+
+.map-wrapper {
+  margin-top: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
 }
 
-@media (max-width: 700px) {
-  .content-section {
-    inset: 20px;
-    padding: 28px 22px;
-    max-height: calc(100vh - 40px);
-  }
-
-  .gallery-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .main-nav {
-    flex-direction: column;
-  }
-
-  .main-nav a {
-    width: 100%;
-  }
-}
-/* Contact and booking request form styles */
-.contact-actions {
-  margin-bottom: 24px;
-}
-
-.booking-form {
-  margin-top: 24px;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-.form-group label {
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-  width: 100%;
-  padding: 12px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
-  font: inherit;
-  outline: none;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  border-color: #ffffff;
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.form-group select option {
-  color: #111111;
-}
-
-.form-group textarea {
-  resize: vertical;
-  min-height: 120px;
-}
-
-.form-actions {
-  margin-top: 12px;
-}
-
-.primary-button {
-  cursor: pointer;
-}
-
-/* Contact form layout on smaller screens */
-@media (max-width: 700px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .contact-actions {
-    flex-direction: column;
-  }
-
-  .location-actions .action-button,
-  .contact-actions .action-button,
-  .form-actions .action-button {
-    width: 100%;
-    text-align: center;
-  }
-}
-/* Main navigation links */
-.main-nav a {
-  display: inline-block;
-  padding: 0.75rem 1rem;
-  color: #ffffff;
-  text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 999px;
-  transition:
-    background 0.2s ease,
-    transform 0.2s ease;
-}
-
-.main-nav a:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-2px);
-}
-/* Content sections */
-
-.content-section.active {
+.map-wrapper iframe {
   display: block;
 }
-/* Action buttons layout for location and contact areas */
+
 .location-actions,
 .contact-actions,
 .form-actions {
@@ -305,7 +453,10 @@ textarea {
   margin-top: 1.25rem;
 }
 
-/* General action button style */
+.contact-actions {
+  margin-bottom: 24px;
+}
+
 .action-button {
   display: inline-flex;
   align-items: center;
@@ -327,29 +478,90 @@ textarea {
   background-color: rgba(255, 255, 255, 0.12);
   transform: translateY(-2px);
 }
-/* This section styles the success message shown after the booking form is sent. */
+
+.primary-button {
+  cursor: pointer;
+}
+
+/* =========================================================
+   Booking form
+   I style the contact and booking request form.
+   ========================================================= */
+
+.booking-form {
+  margin-top: 24px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 6px;
+  outline: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  font: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #ffffff;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.form-group select option {
+  color: #111111;
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-actions {
+  margin-top: 12px;
+}
+
+/* I style the success message shown after the booking form is sent. */
 .form-success-message {
   margin-bottom: 20px;
   padding: 14px 16px;
-  border-radius: 8px;
   border: 1px solid rgba(120, 255, 180, 0.45);
+  border-radius: 8px;
   background: rgba(30, 120, 70, 0.25);
   color: #ffffff;
   font-size: 0.95rem;
   line-height: 1.5;
 }
-/* Google Maps embed container */
-.map-wrapper {
-  margin-top: 20px;
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-}
 
-.map-wrapper iframe {
-  display: block;
-}
-/* Gallery lightbox */
+/* =========================================================
+   Gallery lightbox
+   I style the larger image preview.
+   ========================================================= */
+
 .image-lightbox {
   position: fixed;
   inset: 0;
@@ -366,8 +578,8 @@ textarea {
 }
 
 .lightbox-content {
-  max-width: 900px;
   width: 100%;
+  max-width: 900px;
   margin: 0;
   text-align: center;
 }
@@ -405,6 +617,133 @@ textarea {
   background: rgba(255, 255, 255, 0.18);
 }
 
-.gallery-card img {
-  cursor: pointer;
+/* =========================================================
+   Responsive layout
+   I make the website work better on smaller screens.
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .hero {
+    padding: 2rem 1rem;
+  }
+
+  .hero-content > * {
+    margin-top: 2rem;
+  }
+
+  .hero-content > *::before {
+    top: calc(-2rem - 1px);
+    height: calc(2rem + 1px);
+  }
+
+  .hero-logo {
+    width: 4.75rem;
+    height: 4.75rem;
+  }
+
+  .hero-text-panel {
+    padding: 2.25rem 1.25rem;
+  }
+
+  .main-nav {
+    width: min(100%, 320px);
+    flex-direction: column;
+    margin-top: 2rem;
+  }
+
+  .main-nav a {
+    width: 100%;
+    min-width: 0;
+    border-top: 0;
+    border-left: 1px solid #ffffff;
+    border-radius: 0;
+  }
+
+  .main-nav a:first-child {
+    border-top: 1px solid #ffffff;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .main-nav a:last-child {
+    border-radius: 0 0 4px 4px;
+  }
+
+  .content-section {
+    width: calc(100% - 40px);
+    max-height: calc(100vh - 40px);
+    padding: 3.5rem 1.5rem 1.5rem;
+  }
+
+  .gallery-grid,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .location-actions,
+  .contact-actions,
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .location-actions .action-button,
+  .contact-actions .action-button,
+  .form-actions .action-button {
+    width: 100%;
+    text-align: center;
+  }
+  .hero-logo {
+    margin-bottom: 2rem !important;
+  }
+
+  .hero-logo::after {
+    height: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-description {
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+
+  .content-section h2 {
+    font-size: 26px;
+  }
+}
+/* I create the correct vertical line between the logo circle and the title panel. */
+.hero-logo {
+  position: relative;
+  margin-bottom: 3.5rem !important;
+}
+
+/* I remove any wrong line above the logo. */
+.hero-logo::before {
+  display: none !important;
+}
+
+/* I draw the vertical line from the bottom of the circle down to the title panel. */
+.hero-logo::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 1px;
+  height: 3.5rem;
+  background: #ffffff;
+  transform: translateX(-50%);
+  display: block !important;
+}
+
+/* I make sure the title panel starts after the vertical line, not directly under the circle. */
+.hero-text-panel {
+  margin-top: 0 !important;
+}
+
+/* I remove duplicate automatic lines from the general hero elements. */
+.hero-content > *::before {
+  display: none !important;
 }

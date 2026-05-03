@@ -1,3 +1,11 @@
+// I remove the preload class after the full page has loaded.
+// This starts the intro animation, like in the original Dimension template.
+window.addEventListener("load", function () {
+  window.setTimeout(function () {
+    document.body.classList.remove("is-preload");
+  }, 100);
+});
+
 // I wait until the HTML page is fully loaded.
 document.addEventListener("DOMContentLoaded", function () {
   const navLinks = document.querySelectorAll(".main-nav a");
@@ -9,13 +17,30 @@ document.addEventListener("DOMContentLoaded", function () {
   const bookingForm = document.querySelector(".booking-form");
   const contactSection = document.getElementById("contact");
 
+  const galleryImages = document.querySelectorAll(".gallery-card img");
+  const imageLightbox = document.querySelector(".image-lightbox");
+  const lightboxImage = document.querySelector(".lightbox-image");
+  const lightboxCaption = document.querySelector(".lightbox-caption");
+  const lightboxClose = document.querySelector(".lightbox-close");
+
+  // I remove the hash from the URL without reloading the page.
+  function clearHashFromUrl() {
+    if (window.location.hash) {
+      history.replaceState(
+        null,
+        "",
+        window.location.pathname + window.location.search,
+      );
+    }
+  }
+
   // I close all open sections.
   function closeAllSections() {
     sections.forEach(function (section) {
       section.classList.remove("active");
     });
 
-    document.body.classList.remove("section-open");
+    document.body.classList.remove("section-open", "is-article-visible");
   }
 
   // I open the selected section.
@@ -26,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (selectedSection) {
       selectedSection.classList.add("active");
-      document.body.classList.add("section-open");
+      document.body.classList.add("section-open", "is-article-visible");
     }
   }
 
@@ -44,30 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
   closeButtons.forEach(function (button) {
     button.addEventListener("click", function () {
       closeAllSections();
-
-      if (window.location.hash) {
-        history.replaceState(
-          null,
-          "",
-          window.location.pathname + window.location.search,
-        );
-      }
+      clearHashFromUrl();
     });
-  });
-
-  // I close the open section when Escape is pressed.
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") {
-      closeAllSections();
-
-      if (window.location.hash) {
-        history.replaceState(
-          null,
-          "",
-          window.location.pathname + window.location.search,
-        );
-      }
-    }
   });
 
   // I open a section automatically if the page loads with a hash, for example #contact.
@@ -129,11 +132,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
-  const galleryImages = document.querySelectorAll(".gallery-card img");
-  const imageLightbox = document.querySelector(".image-lightbox");
-  const lightboxImage = document.querySelector(".lightbox-image");
-  const lightboxCaption = document.querySelector(".lightbox-caption");
-  const lightboxClose = document.querySelector(".lightbox-close");
 
   // I open the clicked gallery image in a larger view.
   function openImageLightbox(image) {
@@ -183,9 +181,18 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // I close the image lightbox first, or the open section if no image is open.
   document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") {
-      closeImageLightbox();
+    if (event.key !== "Escape") {
+      return;
     }
+
+    if (imageLightbox && imageLightbox.classList.contains("active")) {
+      closeImageLightbox();
+      return;
+    }
+
+    closeAllSections();
+    clearHashFromUrl();
   });
 });
