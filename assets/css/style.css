@@ -924,3 +924,49 @@ body.is-article-visible .hero::after {
 .content-section .social-icons i {
   font-size: 0.95rem;
 }
+/* I replace the first D from DONA with the custom SVG logo. */
+.hero-title {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0;
+  margin: 0;
+  color: #ffffff;
+  font-size: 2.25rem;
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+/* I style the custom D logo so it matches the title height. */
+.hero-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.05em;
+  height: 1em;
+  flex: 0 0 auto;
+}
+
+/* I make the SVG fill the space cleanly. */
+.hero-title-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* I control the line look of the custom D logo. */
+.hero-title-svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* I keep the remaining letters styled like the template title. */
+.hero-title-text {
+  display: inline-block;
+  letter-spacing: 0.18em;
+  line-height: 1;
+}
