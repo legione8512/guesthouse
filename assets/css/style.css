@@ -970,3 +970,70 @@ body.is-article-visible .hero::after {
   letter-spacing: 0.18em;
   line-height: 1;
 }
+/* I style the dynamic gallery category and thumbnail views. */
+.gallery-view[hidden] {
+  display: none !important;
+}
+
+.gallery-card {
+  cursor: pointer;
+}
+
+.gallery-card:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 4px;
+}
+
+.gallery-album-view {
+  margin-top: 1.5rem;
+}
+
+.gallery-back-button {
+  margin-bottom: 1.5rem;
+}
+
+.gallery-album-title {
+  margin: 0 0 0.75rem 0;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+}
+
+.gallery-album-description {
+  margin: 0 0 1.5rem 0;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.gallery-thumbnail-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.gallery-thumbnail-card img {
+  height: 150px;
+}
+
+.gallery-category-card img {
+  height: 220px;
+}
+
+@media (max-width: 700px) {
+  .gallery-thumbnail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gallery-thumbnail-card img {
+    height: 135px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gallery-thumbnail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-thumbnail-card img {
+    height: 180px;
+  }
+}

@@ -197,32 +197,27 @@
           proprietăţii.
         </p>
 
-        <div class="gallery-grid">
-          <figure class="gallery-card">
-            <img
-              src="assets/images/exterior.jpg"
-              alt="Exterior pensiune în Sinaia"
-            />
-            <figcaption>Exterior pensiune</figcaption>
-          </figure>
+        <div class="gallery-view gallery-category-view">
+          <div id="gallery-categories" class="gallery-grid"></div>
+        </div>
 
-          <figure class="gallery-card">
-            <img
-              src="assets/images/room.jpg"
-              alt="Cameră de cazare la pensiune"
-            />
-            <figcaption>Cameră</figcaption>
-          </figure>
+        <div
+          id="gallery-album-view"
+          class="gallery-view gallery-album-view"
+          hidden
+        >
+          <button type="button" class="action-button gallery-back-button">
+            Înapoi la categorii
+          </button>
 
-          <figure class="gallery-card">
-            <img src="assets/images/view.jpg" alt="Vedere montană din Sinaia" />
-            <figcaption>Vedere</figcaption>
-          </figure>
+          <h3 class="gallery-album-title"></h3>
 
-          <figure class="gallery-card">
-            <img src="assets/images/sinaia.jpg" alt="Peisaj din Sinaia" />
-            <figcaption>Sinaia</figcaption>
-          </figure>
+          <p class="gallery-album-description"></p>
+
+          <div
+            id="gallery-thumbnails"
+            class="gallery-grid gallery-thumbnail-grid"
+          ></div>
         </div>
       </section>
 
@@ -478,6 +473,7 @@
         <figcaption class="lightbox-caption"></figcaption>
       </figure>
     </div>
+    <script src="assets/js/gallery-data.js"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>

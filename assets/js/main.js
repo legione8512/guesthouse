@@ -17,7 +17,18 @@ document.addEventListener("DOMContentLoaded", function () {
   const bookingForm = document.querySelector(".booking-form");
   const contactSection = document.getElementById("contact");
 
-  const galleryImages = document.querySelectorAll(".gallery-card img");
+  const galleryCategoriesContainer =
+    document.getElementById("gallery-categories");
+  const galleryCategoryView = document.querySelector(".gallery-category-view");
+  const galleryAlbumView = document.getElementById("gallery-album-view");
+  const galleryThumbnailsContainer =
+    document.getElementById("gallery-thumbnails");
+  const galleryBackButton = document.querySelector(".gallery-back-button");
+  const galleryAlbumTitle = document.querySelector(".gallery-album-title");
+  const galleryAlbumDescription = document.querySelector(
+    ".gallery-album-description",
+  );
+
   const imageLightbox = document.querySelector(".image-lightbox");
   const lightboxImage = document.querySelector(".lightbox-image");
   const lightboxCaption = document.querySelector(".lightbox-caption");
@@ -43,6 +54,16 @@ document.addEventListener("DOMContentLoaded", function () {
     document.body.classList.remove("section-open", "is-article-visible");
   }
 
+  // I reset the gallery back to the four main categories.
+  function resetGalleryView() {
+    if (!galleryCategoryView || !galleryAlbumView) {
+      return;
+    }
+
+    galleryCategoryView.hidden = false;
+    galleryAlbumView.hidden = true;
+  }
+
   // I open the selected section.
   function openSection(sectionId) {
     closeAllSections();
@@ -52,6 +73,10 @@ document.addEventListener("DOMContentLoaded", function () {
     if (selectedSection) {
       selectedSection.classList.add("active");
       document.body.classList.add("section-open", "is-article-visible");
+    }
+
+    if (sectionId === "#gallery") {
+      resetGalleryView();
     }
   }
 
@@ -133,17 +158,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // I open the clicked gallery image in a larger view.
-  function openImageLightbox(image) {
+  // I open the selected gallery image in a larger view.
+  function openImageLightbox(imageSrc, imageAlt, imageCaption) {
     if (!imageLightbox || !lightboxImage || !lightboxCaption) {
       return;
     }
 
-    lightboxImage.src = image.src;
-    lightboxImage.alt = image.alt;
-
-    const caption = image.closest("figure")?.querySelector("figcaption");
-    lightboxCaption.textContent = caption ? caption.textContent : image.alt;
+    lightboxImage.src = imageSrc;
+    lightboxImage.alt = imageAlt || imageCaption || "Imagine galerie";
+    lightboxCaption.textContent = imageCaption || imageAlt || "";
 
     imageLightbox.classList.add("active");
     imageLightbox.setAttribute("aria-hidden", "false");
@@ -151,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // I close the larger image view.
   function closeImageLightbox() {
-    if (!imageLightbox || !lightboxImage) {
+    if (!imageLightbox || !lightboxImage || !lightboxCaption) {
       return;
     }
 
@@ -159,13 +182,125 @@ document.addEventListener("DOMContentLoaded", function () {
     imageLightbox.setAttribute("aria-hidden", "true");
     lightboxImage.src = "";
     lightboxImage.alt = "";
+    lightboxCaption.textContent = "";
   }
 
-  galleryImages.forEach(function (image) {
-    image.addEventListener("click", function () {
-      openImageLightbox(image);
+  // I create one reusable gallery card.
+  function createGalleryCard(imageSrc, imageAlt, captionText, clickHandler) {
+    const card = document.createElement("figure");
+    card.className = "gallery-card";
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("role", "button");
+
+    const image = document.createElement("img");
+    image.src = imageSrc;
+    image.alt = imageAlt || captionText || "Imagine galerie";
+    image.loading = "lazy";
+
+    const caption = document.createElement("figcaption");
+    caption.textContent = captionText;
+
+    card.appendChild(image);
+    card.appendChild(caption);
+
+    card.addEventListener("click", clickHandler);
+
+    card.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        clickHandler();
+      }
     });
-  });
+
+    return card;
+  }
+
+  // I show the four main gallery categories.
+  function renderGalleryCategories() {
+    if (!galleryCategoriesContainer || !window.galleryData) {
+      return;
+    }
+
+    galleryCategoriesContainer.innerHTML = "";
+
+    Object.keys(window.galleryData).forEach(function (categoryKey) {
+      const category = window.galleryData[categoryKey];
+
+      if (!category || !category.images || category.images.length === 0) {
+        return;
+      }
+
+      const coverImage = category.cover || category.images[0].src;
+
+      const card = createGalleryCard(
+        coverImage,
+        category.title,
+        category.title,
+        function () {
+          renderGalleryAlbum(categoryKey);
+        },
+      );
+
+      card.classList.add("gallery-category-card");
+      galleryCategoriesContainer.appendChild(card);
+    });
+  }
+
+  // I show the thumbnails inside one selected gallery category.
+  function renderGalleryAlbum(categoryKey) {
+    if (
+      !galleryCategoryView ||
+      !galleryAlbumView ||
+      !galleryThumbnailsContainer ||
+      !window.galleryData
+    ) {
+      return;
+    }
+
+    const category = window.galleryData[categoryKey];
+
+    if (!category || !category.images) {
+      return;
+    }
+
+    galleryCategoryView.hidden = true;
+    galleryAlbumView.hidden = false;
+
+    if (galleryAlbumTitle) {
+      galleryAlbumTitle.textContent = category.title;
+    }
+
+    if (galleryAlbumDescription) {
+      galleryAlbumDescription.textContent = category.description || "";
+    }
+
+    galleryThumbnailsContainer.innerHTML = "";
+
+    category.images.forEach(function (galleryImage, index) {
+      const imageCaption =
+        galleryImage.caption || category.title + " " + (index + 1);
+
+      const card = createGalleryCard(
+        galleryImage.src,
+        galleryImage.alt,
+        imageCaption,
+        function () {
+          openImageLightbox(galleryImage.src, galleryImage.alt, imageCaption);
+        },
+      );
+
+      card.classList.add("gallery-thumbnail-card");
+      galleryThumbnailsContainer.appendChild(card);
+    });
+  }
+
+  renderGalleryCategories();
+
+  if (galleryBackButton) {
+    galleryBackButton.addEventListener("click", function () {
+      resetGalleryView();
+    });
+  }
 
   if (lightboxClose) {
     lightboxClose.addEventListener("click", function () {
