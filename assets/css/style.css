@@ -20,10 +20,19 @@ body {
   min-width: 280px;
   margin: 0;
   overflow-x: hidden;
-  font-family: "Source Sans 3", Arial, Helvetica, sans-serif;
-  font-weight: 300;
   color: #ffffff;
   background: #111111;
+}
+
+body,
+input,
+select,
+textarea {
+  color: #ffffff;
+  font-family: "Source Sans Pro", Arial, Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1.65;
 }
 
 .site-wrapper {
@@ -36,17 +45,6 @@ body.is-preload *::before,
 body.is-preload *::after {
   animation: none !important;
   transition: none !important;
-}
-
-body,
-input,
-select,
-textarea {
-  color: #ffffff;
-  font-family: "Source Sans Pro", Arial, Helvetica, sans-serif;
-  font-weight: 300;
-  font-size: 1rem;
-  line-height: 1.65;
 }
 
 /* =========================================================
@@ -128,31 +126,9 @@ body.is-preload .hero::before {
     opacity 0.325s ease-in-out;
 }
 
-/* I create the vertical spacing between the logo, title and menu. */
 .hero-content > * {
   position: relative;
-  margin-top: 3.5rem;
   transition: opacity 0.325s ease-in-out;
-}
-
-/* I draw the vertical line between hero elements. */
-.hero-content > *::before {
-  content: "";
-  position: absolute;
-  top: calc(-3.5rem - 1px);
-  left: calc(50% - 1px);
-  width: 1px;
-  height: calc(3.5rem + 1px);
-  background: #ffffff;
-}
-
-/* I remove the line above the first hero element. */
-.hero-content > :first-child {
-  margin-top: 0;
-}
-
-.hero-content > :first-child::before {
-  display: none;
 }
 
 /* I hide the hero parts during preload. */
@@ -164,6 +140,7 @@ body.is-preload .hero-content > * {
   opacity: 0;
 }
 
+/* I style the circle logo and allow its vertical line to extend outside it. */
 .hero-logo {
   position: relative;
   width: 5.5rem;
@@ -182,11 +159,31 @@ body.is-preload .hero-content > * {
   letter-spacing: 0;
   overflow: visible;
 }
+
 .hero-logo-svg {
   width: 60%;
   height: 60%;
   display: block;
 }
+
+/* I remove any wrong line above the logo. */
+.hero-logo::before {
+  display: none !important;
+}
+
+/* I draw the vertical line from the logo circle to the title panel. */
+.hero-logo::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 1px;
+  height: 3.5rem;
+  background: #ffffff;
+  transform: translateX(-50%);
+  display: block !important;
+}
+
 .hero-text-panel {
   width: min(760px, 100%);
   max-width: 100%;
@@ -224,9 +221,56 @@ h1 {
   color: #ffffff;
   font-size: 2.25rem;
   font-weight: 600;
-  line-height: 1.4rem;
-  letter-spacing: 0.18em;
+  line-height: 1;
   text-transform: uppercase;
+}
+
+/* I replace the first D from DONA with the custom SVG logo. */
+.hero-title {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0;
+  margin: 0;
+  color: #ffffff;
+  font-size: 2.25rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+/* I style the custom D logo so it matches the title height. */
+.hero-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.05em;
+  height: 1em;
+  flex: 0 0 auto;
+}
+
+/* I make the SVG fill the space cleanly. */
+.hero-title-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* I control the line look of the custom D logo. */
+.hero-title-svg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* I keep the remaining letters styled like the template title. */
+.hero-title-text {
+  display: inline-block;
+  letter-spacing: 0.18em;
+  line-height: 1;
 }
 
 .hero-description {
@@ -245,11 +289,25 @@ h1 {
    ========================================================= */
 
 .main-nav {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 0;
   margin-top: 3.5rem;
+}
+
+/* I draw the vertical line between the title panel and the navigation menu. */
+.main-nav::before {
+  content: "";
+  position: absolute;
+  top: calc(-3.5rem - 1px);
+  left: 50%;
+  width: 1px;
+  height: calc(3.5rem + 1px);
+  background: #ffffff;
+  transform: translateX(-50%);
+  display: block !important;
 }
 
 .main-nav a {
@@ -346,17 +404,17 @@ body.is-article-visible .hero::after {
 
 /* Dimension-style article banner images */
 .image {
-  border-radius: 4px;
-  border: 0;
-  display: inline-block;
   position: relative;
+  display: inline-block;
+  border: 0;
+  border-radius: 4px;
 }
 
 .image::before {
   content: "";
-  display: block;
   position: absolute;
   inset: 0;
+  display: block;
   pointer-events: none;
   background-image: url("../images/overlay.png");
   background-color: rgba(19, 21, 25, 0.5);
@@ -452,12 +510,16 @@ body.is-article-visible .hero::after {
 
 /* =========================================================
    Gallery
-   I style the image grid and gallery cards.
+   I style the image grid, category cards and thumbnails.
    ========================================================= */
+
+.gallery-view[hidden] {
+  display: none !important;
+}
 
 .gallery-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   margin-top: 22px;
 }
@@ -470,6 +532,12 @@ body.is-article-visible .hero::after {
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+}
+
+.gallery-card:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 4px;
 }
 
 .gallery-card img {
@@ -498,6 +566,52 @@ body.is-article-visible .hero::after {
   backdrop-filter: blur(6px);
   color: #ffffff;
   font-size: 14px;
+}
+
+.gallery-album-view {
+  margin-top: 1.5rem;
+}
+
+.gallery-back-button {
+  margin-bottom: 1.5rem;
+}
+
+.gallery-album-title {
+  margin: 0 0 0.75rem 0;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+}
+
+.gallery-album-description {
+  margin: 0 0 1.5rem 0;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.gallery-category-card img {
+  height: 220px;
+}
+
+.gallery-thumbnail-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.gallery-thumbnail-card {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.gallery-thumbnail-card img {
+  display: block;
+  height: 150px;
+}
+
+.gallery-thumbnail-card figcaption {
+  display: none !important;
 }
 
 /* =========================================================
@@ -687,9 +801,7 @@ body.is-article-visible .hero::after {
 }
 
 .lightbox-caption {
-  margin-top: 12px;
-  color: #ffffff;
-  font-size: 0.95rem;
+  display: none;
 }
 
 .lightbox-close {
@@ -712,177 +824,10 @@ body.is-article-visible .hero::after {
 }
 
 /* =========================================================
-   Responsive layout
-   I make the website work better on smaller screens.
+   Social icons
+   I style the social icons in the contact section.
    ========================================================= */
 
-@media (max-width: 700px) {
-  .hero {
-    padding: 2rem 1rem;
-  }
-
-  .hero-content > * {
-    margin-top: 2rem;
-  }
-
-  .hero-content > *::before {
-    top: calc(-2rem - 1px);
-    height: calc(2rem + 1px);
-  }
-
-  .hero-logo {
-    width: 4.75rem;
-    height: 4.75rem;
-  }
-
-  .hero-text-panel {
-    padding: 2.25rem 1.25rem;
-  }
-
-  .main-nav {
-    width: auto;
-    min-width: 10rem;
-    max-width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-    margin-top: 2rem;
-  }
-
-  .main-nav a {
-    width: 100%;
-    min-width: 0;
-    border-left: 1px solid #ffffff;
-    border-top: 0;
-    border-radius: 0;
-  }
-
-  .main-nav a:first-child {
-    border-top: 1px solid #ffffff;
-    border-radius: 4px 4px 0 0;
-  }
-
-  .main-nav a:last-child {
-    border-radius: 0 0 4px 4px;
-  }
-
-  .content-section {
-    width: calc(100% - 40px);
-    max-height: calc(100vh - 40px);
-    padding: 3.5rem 1.5rem 1.5rem;
-  }
-
-  .content-section h2 {
-    font-size: 1.25rem;
-    letter-spacing: 0.35rem;
-  }
-
-  .gallery-grid,
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .location-actions,
-  .contact-actions,
-  .form-actions {
-    flex-direction: column;
-  }
-
-  .location-actions .action-button,
-  .contact-actions .action-button,
-  .form-actions .action-button {
-    width: 100%;
-    text-align: center;
-  }
-  .hero-logo {
-    margin-bottom: 2rem !important;
-  }
-
-  .hero-logo::after {
-    height: 2rem;
-  }
-
-  .main-nav::before {
-    top: calc(-2rem - 1px);
-    height: calc(2rem + 1px);
-  }
-
-  .image.main {
-    margin: 2rem 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-description {
-    font-size: 0.8rem;
-    letter-spacing: 0.05em;
-  }
-
-  .content-section h2 {
-    font-size: 26px;
-  }
-  .main-nav {
-    min-width: 0;
-  }
-
-  .main-nav a {
-    width: 8.7rem;
-    min-width: 0;
-  }
-}
-
-/* I remove the automatic vertical lines, because I draw the two needed lines manually. */
-.hero-content > *::before {
-  display: none !important;
-}
-
-/* I keep the logo circle visible and allow the vertical line to extend outside it. */
-.hero-logo {
-  position: relative;
-  margin-bottom: 3.5rem !important;
-  overflow: visible;
-}
-
-/* I remove any wrong line above the logo. */
-.hero-logo::before {
-  display: none !important;
-}
-
-/* I draw the vertical line from the bottom of the logo circle to the title panel. */
-.hero-logo::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  width: 1px;
-  height: 3.5rem;
-  background: #ffffff;
-  transform: translateX(-50%);
-  display: block !important;
-}
-
-/* I keep the title panel directly after the logo spacing. */
-.hero-text-panel {
-  margin-top: 0 !important;
-}
-
-/* I draw the vertical line between the title panel and the navigation menu. */
-.main-nav {
-  position: relative;
-}
-
-.main-nav::before {
-  content: "";
-  position: absolute;
-  top: calc(-3.5rem - 1px);
-  left: 50%;
-  width: 1px;
-  height: calc(3.5rem + 1px);
-  background: #ffffff;
-  transform: translateX(-50%);
-  display: block !important;
-}
-
-/* Dimension-style social icons */
 .content-section .social-icons {
   display: flex;
   flex-wrap: wrap;
@@ -924,101 +869,78 @@ body.is-article-visible .hero::after {
 .content-section .social-icons i {
   font-size: 0.95rem;
 }
-/* I replace the first D from DONA with the custom SVG logo. */
-.hero-title {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 0;
-  margin: 0;
-  color: #ffffff;
-  font-size: 2.25rem;
-  font-weight: 600;
-  line-height: 1;
-  text-transform: uppercase;
-}
 
-/* I style the custom D logo so it matches the title height. */
-.hero-title-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.05em;
-  height: 1em;
-  flex: 0 0 auto;
-}
-
-/* I make the SVG fill the space cleanly. */
-.hero-title-svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-
-/* I control the line look of the custom D logo. */
-.hero-title-svg path {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 5.25;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* I keep the remaining letters styled like the template title. */
-.hero-title-text {
-  display: inline-block;
-  letter-spacing: 0.18em;
-  line-height: 1;
-}
-/* I style the dynamic gallery category and thumbnail views. */
-.gallery-view[hidden] {
-  display: none !important;
-}
-
-.gallery-card {
-  cursor: pointer;
-}
-
-.gallery-card:focus-visible {
-  outline: 2px solid #ffffff;
-  outline-offset: 4px;
-}
-
-.gallery-album-view {
-  margin-top: 1.5rem;
-}
-
-.gallery-back-button {
-  margin-bottom: 1.5rem;
-}
-
-.gallery-album-title {
-  margin: 0 0 0.75rem 0;
-  color: #ffffff;
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.2rem;
-  text-transform: uppercase;
-}
-
-.gallery-album-description {
-  margin: 0 0 1.5rem 0;
-  color: rgba(255, 255, 255, 0.86);
-}
-
-.gallery-thumbnail-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.gallery-thumbnail-card img {
-  height: 150px;
-}
-
-.gallery-category-card img {
-  height: 220px;
-}
+/* =========================================================
+   Responsive layout
+   I make the website work better on smaller screens.
+   ========================================================= */
 
 @media (max-width: 700px) {
+  .hero {
+    padding: 2rem 1rem;
+  }
+
+  .hero-logo {
+    width: 4.75rem;
+    height: 4.75rem;
+    margin-bottom: 2rem !important;
+  }
+
+  .hero-logo::after {
+    height: 2rem;
+  }
+
+  .hero-text-panel {
+    padding: 2.25rem 1.25rem;
+  }
+
+  .main-nav {
+    width: auto;
+    min-width: 10rem;
+    max-width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 2rem;
+  }
+
+  .main-nav::before {
+    top: calc(-2rem - 1px);
+    height: calc(2rem + 1px);
+  }
+
+  .main-nav a {
+    width: 100%;
+    min-width: 0;
+    border-left: 1px solid #ffffff;
+    border-top: 0;
+    border-radius: 0;
+  }
+
+  .main-nav a:first-child {
+    border-top: 1px solid #ffffff;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .main-nav a:last-child {
+    border-radius: 0 0 4px 4px;
+  }
+
+  .content-section {
+    width: calc(100% - 40px);
+    max-height: calc(100vh - 40px);
+    padding: 3.5rem 1.5rem 1.5rem;
+  }
+
+  .content-section h2 {
+    font-size: 1.25rem;
+    letter-spacing: 0.35rem;
+  }
+
+  .gallery-grid,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
   .gallery-thumbnail-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1026,9 +948,50 @@ body.is-article-visible .hero::after {
   .gallery-thumbnail-card img {
     height: 135px;
   }
+
+  .location-actions,
+  .contact-actions,
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .location-actions .action-button,
+  .contact-actions .action-button,
+  .form-actions .action-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .image.main {
+    margin: 2rem 0;
+  }
 }
 
 @media (max-width: 480px) {
+  h1,
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .hero-description {
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+  }
+
+  .content-section h2 {
+    font-size: 1.1rem;
+    letter-spacing: 0.25rem;
+  }
+
+  .main-nav {
+    min-width: 0;
+  }
+
+  .main-nav a {
+    width: 8.7rem;
+    min-width: 0;
+  }
+
   .gallery-thumbnail-grid {
     grid-template-columns: 1fr;
   }
