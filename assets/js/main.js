@@ -29,10 +29,23 @@ document.addEventListener("DOMContentLoaded", function () {
     ".gallery-album-description",
   );
 
+  const roomsCardsContainer = document.getElementById("rooms-cards");
+  const roomsListView = document.querySelector(".rooms-list-view");
+  const roomGalleryView = document.getElementById("room-gallery-view");
+  const roomThumbnailsContainer = document.getElementById("room-thumbnails");
+  const roomsBackButton = document.querySelector(".rooms-back-button");
+  const roomGalleryTitle = document.querySelector(".room-gallery-title");
+  const roomGallerySubtitle = document.querySelector(".room-gallery-subtitle");
+
   const imageLightbox = document.querySelector(".image-lightbox");
   const lightboxImage = document.querySelector(".lightbox-image");
   const lightboxCaption = document.querySelector(".lightbox-caption");
   const lightboxClose = document.querySelector(".lightbox-close");
+  const lightboxPreviousButton = document.querySelector(".lightbox-prev");
+  const lightboxNextButton = document.querySelector(".lightbox-next");
+
+  let currentLightboxImages = [];
+  let currentLightboxIndex = 0;
 
   // I remove the hash from the URL without reloading the page.
   function clearHashFromUrl() {
@@ -64,6 +77,16 @@ document.addEventListener("DOMContentLoaded", function () {
     galleryAlbumView.hidden = true;
   }
 
+  // I reset the rooms section back to the room cards.
+  function resetRoomsView() {
+    if (!roomsListView || !roomGalleryView) {
+      return;
+    }
+
+    roomsListView.hidden = false;
+    roomGalleryView.hidden = true;
+  }
+
   // I open the selected section.
   function openSection(sectionId) {
     closeAllSections();
@@ -77,6 +100,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (sectionId === "#gallery") {
       resetGalleryView();
+    }
+
+    if (sectionId === "#rooms") {
+      resetRoomsView();
     }
   }
 
@@ -158,15 +185,61 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // I open the selected gallery image in a larger view.
-  function openImageLightbox(imageSrc, imageAlt, imageCaption) {
+  // I show the current image inside the larger image view.
+  function showCurrentLightboxImage() {
+    if (
+      !lightboxImage ||
+      !lightboxCaption ||
+      currentLightboxImages.length === 0
+    ) {
+      return;
+    }
+
+    const currentImage = currentLightboxImages[currentLightboxIndex];
+
+    lightboxImage.src = currentImage.src;
+    lightboxImage.alt =
+      currentImage.alt || currentImage.caption || "Imagine galerie";
+    lightboxCaption.textContent =
+      currentImage.caption || currentImage.alt || "";
+  }
+
+  // I open the selected image in a larger view.
+  function openImageLightbox(
+    imageSrc,
+    imageAlt,
+    imageCaption,
+    imageList,
+    selectedIndex,
+  ) {
     if (!imageLightbox || !lightboxImage || !lightboxCaption) {
       return;
     }
 
-    lightboxImage.src = imageSrc;
-    lightboxImage.alt = imageAlt || imageCaption || "Imagine galerie";
-    lightboxCaption.textContent = imageCaption || imageAlt || "";
+    if (Array.isArray(imageList) && imageList.length > 0) {
+      currentLightboxImages = imageList.map(function (image, index) {
+        return {
+          src: image.src,
+          alt: image.alt || imageCaption || "Imagine galerie",
+          caption: image.caption || imageCaption || "Imagine " + (index + 1),
+        };
+      });
+
+      currentLightboxIndex =
+        typeof selectedIndex === "number" ? selectedIndex : 0;
+    } else {
+      currentLightboxImages = [
+        {
+          src: imageSrc,
+          alt: imageAlt || imageCaption || "Imagine galerie",
+          caption: imageCaption || imageAlt || "",
+        },
+      ];
+
+      currentLightboxIndex = 0;
+    }
+
+    showCurrentLightboxImage();
 
     imageLightbox.classList.add("active");
     imageLightbox.setAttribute("aria-hidden", "false");
@@ -183,6 +256,25 @@ document.addEventListener("DOMContentLoaded", function () {
     lightboxImage.src = "";
     lightboxImage.alt = "";
     lightboxCaption.textContent = "";
+    currentLightboxImages = [];
+    currentLightboxIndex = 0;
+  }
+
+  // I move to the previous or next image in the current lightbox list.
+  function moveLightboxImage(direction) {
+    if (!imageLightbox || !imageLightbox.classList.contains("active")) {
+      return;
+    }
+
+    if (currentLightboxImages.length <= 1) {
+      return;
+    }
+
+    currentLightboxIndex =
+      (currentLightboxIndex + direction + currentLightboxImages.length) %
+      currentLightboxImages.length;
+
+    showCurrentLightboxImage();
   }
 
   // I create one reusable gallery card.
@@ -285,7 +377,13 @@ document.addEventListener("DOMContentLoaded", function () {
         galleryImage.alt,
         imageCaption,
         function () {
-          openImageLightbox(galleryImage.src, galleryImage.alt, imageCaption);
+          openImageLightbox(
+            galleryImage.src,
+            galleryImage.alt,
+            imageCaption,
+            category.images,
+            index,
+          );
         },
       );
 
@@ -294,7 +392,139 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // I create one room card.
+  function createRoomCard(roomKey, room) {
+    const card = document.createElement("article");
+    card.className = "room-card gallery-card";
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("role", "button");
+
+    const image = document.createElement("img");
+    image.src = room.cover;
+    image.alt = room.title;
+    image.loading = "lazy";
+
+    const body = document.createElement("div");
+    body.className = "room-card-body";
+
+    const title = document.createElement("h3");
+    title.textContent = room.title;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "action-button room-card-button";
+    button.textContent = "Vezi poze";
+
+    function openRoom() {
+      renderRoomGallery(roomKey);
+    }
+
+    card.addEventListener("click", openRoom);
+
+    card.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openRoom();
+      }
+    });
+
+    button.addEventListener("click", function (event) {
+      event.stopPropagation();
+      openRoom();
+    });
+
+    body.appendChild(title);
+
+    card.appendChild(image);
+    card.appendChild(button);
+    card.appendChild(body);
+
+    return card;
+  }
+
+  // I show all room cards.
+  function renderRooms() {
+    if (!roomsCardsContainer || !window.roomsData) {
+      return;
+    }
+
+    roomsCardsContainer.innerHTML = "";
+
+    Object.keys(window.roomsData).forEach(function (roomKey) {
+      const room = window.roomsData[roomKey];
+
+      if (!room || !room.images || room.images.length === 0) {
+        return;
+      }
+
+      const card = createRoomCard(roomKey, room);
+      roomsCardsContainer.appendChild(card);
+    });
+  }
+
+  // I show the photos for one selected room.
+  function renderRoomGallery(roomKey) {
+    if (
+      !roomsListView ||
+      !roomGalleryView ||
+      !roomThumbnailsContainer ||
+      !window.roomsData
+    ) {
+      return;
+    }
+
+    const room = window.roomsData[roomKey];
+
+    if (!room || !room.images) {
+      return;
+    }
+
+    roomsListView.hidden = true;
+    roomGalleryView.hidden = false;
+
+    if (roomGalleryTitle) {
+      roomGalleryTitle.textContent = room.title;
+    }
+
+    if (roomGallerySubtitle) {
+      roomGallerySubtitle.textContent = room.subtitle || "";
+    }
+
+    roomThumbnailsContainer.innerHTML = "";
+
+    room.images.forEach(function (roomImage, index) {
+      const imageCaption = room.title + " - imagine " + (index + 1);
+
+      const roomLightboxImages = room.images.map(function (image, imageIndex) {
+        return {
+          src: image.src,
+          alt: image.alt || room.title,
+          caption: room.title + " - imagine " + (imageIndex + 1),
+        };
+      });
+
+      const card = createGalleryCard(
+        roomImage.src,
+        roomImage.alt,
+        imageCaption,
+        function () {
+          openImageLightbox(
+            roomImage.src,
+            roomImage.alt,
+            imageCaption,
+            roomLightboxImages,
+            index,
+          );
+        },
+      );
+
+      card.classList.add("room-thumbnail-card");
+      roomThumbnailsContainer.appendChild(card);
+    });
+  }
+
   renderGalleryCategories();
+  renderRooms();
 
   if (galleryBackButton) {
     galleryBackButton.addEventListener("click", function () {
@@ -302,9 +532,27 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  if (roomsBackButton) {
+    roomsBackButton.addEventListener("click", function () {
+      resetRoomsView();
+    });
+  }
+
   if (lightboxClose) {
     lightboxClose.addEventListener("click", function () {
       closeImageLightbox();
+    });
+  }
+
+  if (lightboxPreviousButton) {
+    lightboxPreviousButton.addEventListener("click", function () {
+      moveLightboxImage(-1);
+    });
+  }
+
+  if (lightboxNextButton) {
+    lightboxNextButton.addEventListener("click", function () {
+      moveLightboxImage(1);
     });
   }
 
@@ -318,16 +566,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // I close the image lightbox first, or the open section if no image is open.
   document.addEventListener("keydown", function (event) {
-    if (event.key !== "Escape") {
-      return;
-    }
-
     if (imageLightbox && imageLightbox.classList.contains("active")) {
-      closeImageLightbox();
-      return;
+      if (event.key === "Escape") {
+        closeImageLightbox();
+        return;
+      }
+
+      if (event.key === "ArrowLeft") {
+        moveLightboxImage(-1);
+        return;
+      }
+
+      if (event.key === "ArrowRight") {
+        moveLightboxImage(1);
+        return;
+      }
     }
 
-    closeAllSections();
-    clearHashFromUrl();
+    if (event.key === "Escape") {
+      closeAllSections();
+      clearHashFromUrl();
+    }
   });
 });

@@ -108,27 +108,95 @@
         </button>
 
         <h2>Camere</h2>
+
         <span class="image main">
-          <img
-            src="assets/images/pic02.jpg"
-            alt="Cameră de cazare la pensiune"
-          />
+          <img src="assets/images/976733.jpg" alt="Cameră la Pensiunea DONA" />
         </span>
+
         <p>
-          Pensiunea dispune de camere potrivite pentru cazare de scurtă sau
-          medie durată. Informaţiile exacte despre camere vor fi actualizate în
-          funcţie de datele finale primite de la proprietar.
+          Pensiunea DONA oferă cazare confortabilă în Sinaia, în camere
+          potrivite pentru cupluri, familii şi grupuri mici. Camerele
+          disponibile includ camere duble, o cameră triplă şi un apartament,
+          toate cu baie proprie şi dotări esenţiale pentru un sejur relaxant la
+          munte.
         </p>
 
+        <p>
+          Camerele sunt dotate cu baie proprie, încălzire centrală, TV,
+          mini-frigider, uscător de păr şi acces gratuit la Wi-Fi. Unele camere
+          dispun şi de balcon, oferind un plus de confort pentru oaspeţii care
+          doresc să se bucure de aerul montan din Sinaia.
+        </p>
+
+        <p>Configuraţia camerelor este următoarea:</p>
+
         <ul>
-          <li>Camere duble sau matrimoniale</li>
-          <li>Baie proprie</li>
-          <li>Wi-Fi</li>
-          <li>TV</li>
-          <li>Încălzire</li>
-          <li>Parcare, dacă este disponibilă</li>
-          <li>Mic dejun, dacă este oferit de pensiune</li>
+          <li>
+            <strong>Camera 2:</strong> cameră dublă cu pat matrimonial, baie
+            proprie şi balcon.
+          </li>
+          <li>
+            <strong>Camera 3:</strong> cameră triplă cu un pat matrimonial, un
+            pat de o persoană, baie proprie şi balcon.
+          </li>
+          <li>
+            <strong>Camera 4:</strong> cameră dublă cu pat matrimonial, baie
+            proprie şi fără balcon.
+          </li>
+          <li>
+            <strong>Camera 5:</strong> cameră dublă cu pat matrimonial, baie
+            proprie şi balcon.
+          </li>
+          <li>
+            <strong>Camera 6:</strong> cameră dublă cu pat matrimonial, baie
+            proprie şi fără balcon.
+          </li>
+          <li>
+            <strong>Camera 7:</strong> apartament de 5 locuri, compus din trei
+            camere: o cameră cu pat matrimonial, o cameră cu o canapea
+            extensibilă pentru două persoane şi o cameră cu pat single.
+            Apartamentul are baie proprie şi nu are balcon.
+          </li>
+          <li>
+            <strong>Camera 8:</strong> cameră dublă cu pat matrimonial, baie
+            proprie şi fără balcon.
+          </li>
         </ul>
+
+        <p>
+          În camerele duble se pot caza 2 adulţi şi 1 copil de maximum 10 ani.
+          În camera triplă se pot caza 2 adulţi şi 2 copii sau 3 adulţi şi 1
+          copil de maximum 10 ani. Apartamentul poate găzdui 4 adulţi şi 2 copii
+          de maximum 10 ani.
+        </p>
+
+        <p>
+          Check-in-ul se face începând cu ora 14:00, iar check-out-ul până la
+          ora 11:00. Copiii sunt bineveniţi, iar copiii până la 7 ani
+          beneficiază de gratuitate la cazare. Pentru copiii peste 7 ani sau
+          adulţii care solicită pat suplimentar, se poate aplica un cost
+          suplimentar. Condiţiile exacte, disponibilitatea camerelor şi
+          eventualele cerinţe speciale se confirmă telefonic sau prin WhatsApp.
+        </p>
+
+        <div class="rooms-view rooms-list-view">
+          <div id="rooms-cards" class="rooms-grid"></div>
+        </div>
+
+        <div id="room-gallery-view" class="rooms-view room-gallery-view" hidden>
+          <button type="button" class="action-button rooms-back-button">
+            Înapoi la camere
+          </button>
+
+          <h3 class="room-gallery-title"></h3>
+
+          <p class="room-gallery-subtitle"></p>
+
+          <div
+            id="room-thumbnails"
+            class="gallery-grid room-thumbnail-grid"
+          ></div>
+        </div>
       </section>
 
       <section id="gallery" class="content-section">
@@ -421,12 +489,29 @@
         &times;
       </button>
 
+      <button
+        class="lightbox-nav lightbox-prev"
+        type="button"
+        aria-label="Imaginea anterioară"
+      >
+        &#10094;
+      </button>
+
       <figure class="lightbox-content">
         <img class="lightbox-image" src="" alt="" />
         <figcaption class="lightbox-caption"></figcaption>
       </figure>
+
+      <button
+        class="lightbox-nav lightbox-next"
+        type="button"
+        aria-label="Imaginea următoare"
+      >
+        &#10095;
+      </button>
     </div>
     <script src="assets/js/gallery-data.js"></script>
+    <script src="assets/js/rooms-data.js"></script>
     <script src="assets/js/main.js"></script>
   </body>
 </html>

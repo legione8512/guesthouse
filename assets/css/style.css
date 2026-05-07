@@ -816,6 +816,51 @@ body.is-article-visible .hero::after {
   background: rgba(255, 255, 255, 0.18);
 }
 
+/* I style the previous and next buttons inside the image lightbox. */
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 1000;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.lightbox-prev {
+  left: 24px;
+}
+
+.lightbox-next {
+  right: 24px;
+}
+
+.lightbox-nav:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+@media (max-width: 700px) {
+  .lightbox-nav {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.4rem;
+  }
+
+  .lightbox-prev {
+    left: 10px;
+  }
+
+  .lightbox-next {
+    right: 10px;
+  }
+}
+
 /* =========================================================
    Social icons
    I style the social icons in the contact section.
@@ -992,4 +1037,137 @@ body.is-article-visible .hero::after {
   .gallery-thumbnail-card img {
     height: 180px;
   }
+}
+/* =========================================================
+   Rooms
+   I style the room cards and room photo thumbnails.
+   ========================================================= */
+
+.rooms-view[hidden] {
+  display: none !important;
+}
+
+.rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.room-card {
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease-in-out,
+    transform 0.2s ease-in-out;
+}
+
+.room-card:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 4px;
+}
+
+.room-card-body {
+  padding: 0 1rem;
+}
+
+.room-card-body h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.16rem;
+  text-transform: uppercase;
+}
+
+.room-card-button {
+  position: absolute;
+  right: 0.85rem;
+  bottom: 2rem;
+  z-index: 2;
+  min-width: 0;
+  height: 2.35rem;
+  padding: 0 0.9rem;
+  background-color: rgba(27, 31, 34, 0.72);
+  backdrop-filter: blur(6px);
+  font-size: 0.7rem;
+  line-height: 2.35rem;
+}
+
+.room-gallery-view {
+  margin-top: 1.5rem;
+}
+
+.rooms-back-button {
+  margin-bottom: 1.5rem;
+}
+
+.room-gallery-title {
+  margin: 0 0 0.75rem 0;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+}
+
+.room-gallery-subtitle {
+  margin: 0 0 1.5rem 0;
+  color: rgba(255, 255, 255, 0.86);
+}
+
+.room-thumbnail-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.room-thumbnail-card {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.room-thumbnail-card img {
+  display: block;
+  height: 150px;
+}
+
+.room-thumbnail-card figcaption {
+  display: none !important;
+}
+
+@media (max-width: 700px) {
+  .rooms-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .room-thumbnail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .room-thumbnail-card img {
+    height: 135px;
+  }
+}
+
+@media (max-width: 480px) {
+  .room-thumbnail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .room-thumbnail-card img {
+    height: 180px;
+  }
+}
+/* I change the mouse cursor to a magnifying glass on images that can be enlarged. */
+.gallery-thumbnail-card,
+.gallery-thumbnail-card img,
+.room-thumbnail-card,
+.room-thumbnail-card img {
+  cursor: zoom-in;
 }

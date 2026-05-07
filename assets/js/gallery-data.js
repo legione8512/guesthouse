@@ -115,7 +115,7 @@ window.galleryData = {
         alt: "Imagine cu Castelul Peleş",
       },
       {
-        src: "assets/images/gallery/sinaia/Snow_1.jpg",
+        src: "assets/images/gallery/sinaia/Snow_1.jpeg",
         caption: "Sinaia",
         alt: "Peisaj de iarnă în Sinaia",
       },
